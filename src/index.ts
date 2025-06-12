@@ -74,12 +74,7 @@ async function handleCommand(roomId: string, e: any) {
   if (event.content.msgtype !== "m.text") return;
   if (event.sender === (await client.getUserId())) return;
 
-  console.log(event);
-
   const body = event.content.body.toLowerCase();
-
-  const room = await client.getAccountData("m.direct");
-  console.log(room);
 
   if (body == "is fm bot online?") {
     client.replyNotice(
@@ -114,8 +109,12 @@ async function handleCommand(roomId: string, e: any) {
         );
         return;
       }
-      await prisma.matrixUser.create({
-        data: {
+      await prisma.matrixUser.upsert({
+        where: { userId: event.sender },
+        update: {
+          sessionKey: pendingConnection.sessionKey,
+        },
+        create: {
           userId: event.sender,
           sessionKey: pendingConnection.sessionKey,
         },
@@ -147,7 +146,7 @@ async function handleCommand(roomId: string, e: any) {
         client.replyNotice(
           roomId,
           event,
-          "you need to link your account first! please declare `i want to connect my last.fm account to the bot`"
+          "i have no idea! you need to link your account first, please declare `i want to connect my last.fm account to the bot`"
         );
         return;
       }
@@ -175,7 +174,7 @@ async function handleCommand(roomId: string, e: any) {
         client.replyNotice(
           roomId,
           event,
-          "you need to link your account first! please declare `i want to connect my last.fm account to the bot`"
+          "who even are you?? you need to link your account first, please declare `i want to connect my last.fm account to the bot`"
         );
         return;
       }

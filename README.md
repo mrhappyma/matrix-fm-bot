@@ -1,15 +1,15 @@
 # matrix-fm-bot
 
-To install dependencies:
+a simple little matrix bot that shares what song you're listening to. might do more later. loosly based off the discord fm bot.
 
-```bash
-bun install
-```
+![](image.png)
 
-To run:
+## usage
 
-```bash
-bun run index.ts
-```
+if you trust me not to mess with your last.fm account or read your messages in matrix (i won't!), just add the `@fm:userexe.me` to a room, then send `i want to connect my last.fm account to the bot` and it will give you instructions to link your account.
 
-This project was created using `bun init` in bun v1.2.2. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+you can also host it yourself:
+
+# self-hosting
+
+todo
