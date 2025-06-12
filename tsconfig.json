@@ -1,0 +1,16 @@
+{
+  "include": ["./src/**/*"],
+  "compilerOptions": {
+    "skipLibCheck": true,
+
+    "lib": ["es2023"],
+    "module": "Node16",
+    "target": "es2022",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node16",
+    "resolveJsonModule": true,
+
+    "outDir": "./dist"
+  }
+}

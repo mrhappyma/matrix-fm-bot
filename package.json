@@ -1,0 +1,23 @@
+{
+  "scripts": {
+    "postinstall": "prisma generate"
+  },
+  "name": "matrix-fm-bot",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^24.0.1",
+    "prisma": "^6.9.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.9.0",
+    "@types/express": "^5.0.3",
+    "express": "^5.1.0",
+    "lastfm-ts-api": "github:mrhappyma/lastfm-ts-api#built",
+    "matrix-bot-sdk": "^0.7.1",
+    "zod": "^3.25.62"
+  }
+}

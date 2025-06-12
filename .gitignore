@@ -1,0 +1,7 @@
+.env
+src/auth.ts
+dist
+src/generated
+node_modules
+store.json
+crypto-store
