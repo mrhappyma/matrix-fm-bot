@@ -130,7 +130,7 @@ async function handleCommand(roomId: string, e: any) {
       client.replyNotice(
         roomId,
         event,
-        `you're all linked up, ${user.user.realname}!`
+        `you're all linked up, ${user.user.realname ?? user.user.name}!`
       );
     } catch (error) {
       console.error("Error handling command:", error);
