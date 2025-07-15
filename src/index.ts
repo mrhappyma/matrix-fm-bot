@@ -221,4 +221,69 @@ async function handleCommand(roomId: string, e: any) {
       client.replyNotice(roomId, event, "whoops an error :(");
     }
   }
+  if (event.content.body == "ALBUM") {
+    try {
+      const userRecord = await prisma.matrixUser.findUnique({
+        where: { userId: event.sender },
+      });
+      if (!userRecord) {
+        client.replyNotice(
+          roomId,
+          event,
+          "who even are you?? you need to link your account first, please declare `i want to connect my last.fm account to the bot`"
+        );
+        return;
+      }
+      const userapi = new LastFMUser(
+        env.API_KEY,
+        env.SHARED_SECRET,
+        userRecord.sessionKey
+      );
+      const user = await userapi.getInfo({});
+      const song = await userapi.getRecentTracks({
+        limit: 1,
+        user: user.user.name,
+      });
+      if (song.recenttracks.track.length === 0) {
+        client.replyNotice(
+          roomId,
+          event,
+          "you haven't scrobbled anything yet!"
+        );
+        return;
+      }
+      const currentTrack = song.recenttracks.track[0];
+      const album = currentTrack.album["#text"];
+      if (!album) {
+        client.replyNotice(
+          roomId,
+          event,
+          "this track has no album? check in on your scrobbler i dont think its sending that data lol"
+        );
+        return;
+      }
+      const deezerSearchRequest = await fetch(
+        `https://api.deezer.com/search?strict=true&q=album:"${encodeURIComponent(
+          album
+        )}" artist:"${encodeURIComponent(currentTrack.artist["#text"])}"`
+      );
+      const deezerSearchResults = (await deezerSearchRequest.json()) as {
+        data?: { id: number }[];
+      };
+      const deezerAlbum = deezerSearchResults?.data?.[0] as
+        | { id: number }
+        | undefined;
+      let link = deezerAlbum?.id
+        ? `https://album.link/d/${deezerAlbum.id}`
+        : currentTrack.url;
+      client.replyHtmlText(
+        roomId,
+        event,
+        `${currentTrack.artist["#text"]} - <a href="${link}">${currentTrack.name}</a>`
+      );
+    } catch (error) {
+      console.error("Error handling command:", error);
+      client.replyNotice(roomId, event, "whoops an error :(");
+    }
+  }
 }
