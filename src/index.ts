@@ -265,12 +265,14 @@ async function handleCommand(roomId: string, e: any) {
       const deezerSearchRequest = await fetch(
         `https://api.deezer.com/search?strict=true&q=album:"${encodeURIComponent(
           album
-        )}" artist:"${encodeURIComponent(currentTrack.artist["#text"])}"`
+        )}" artist:"${encodeURIComponent(
+          currentTrack.artist["#text"]
+        )}" track:"${encodeURIComponent(currentTrack.name)}"`
       );
       const deezerSearchResults = (await deezerSearchRequest.json()) as {
-        data?: { id: number }[];
+        data?: { id: number; album: { id: number } }[];
       };
-      const deezerAlbum = deezerSearchResults?.data?.[0] as
+      const deezerAlbum = deezerSearchResults?.data?.[0]?.album as
         | { id: number }
         | undefined;
       let link = deezerAlbum?.id
@@ -279,7 +281,7 @@ async function handleCommand(roomId: string, e: any) {
       client.replyHtmlText(
         roomId,
         event,
-        `${currentTrack.artist["#text"]} - <a href="${link}">${currentTrack.name}</a>`
+        `${currentTrack.artist["#text"]} - <a href="${link}">${album}</a>`
       );
     } catch (error) {
       console.error("Error handling command:", error);
